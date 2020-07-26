@@ -1,8 +1,8 @@
 import { describe } from 'mocha'
 import { assert } from 'chai'
-import { from, fromEvent, observable, Observable } from 'rxjs'
-import { fromPromise } from 'rxjs/internal-compatibility'
-import { map } from 'rxjs/operators'
+import { from, fromEvent, observable, Observable, of } from 'rxjs'
+import { fromIterable, fromPromise } from 'rxjs/internal-compatibility'
+import { map, pluck, reduce } from 'rxjs/operators'
 
 describe('stream test', () => {
   it('stream execute', () => {
@@ -26,7 +26,31 @@ describe('observable', () => {
       })
   })
 
-  it('event', () => {
-    // fromEvent()
+  it('should pluck', function() {
+    interface Data {
+      date: string
+      amount: number
+    }
+    const datas: Data[] = [
+      {
+        date: '2019-07-01',
+        amount: -320
+      },
+      {
+        date: '2019-07-13',
+        amount: 1000
+      },
+      {
+        date: '2019-07-22',
+        amount: 45
+      }
+    ]
+    fromIterable(datas)
+      .pipe(
+        pluck('amount'),
+        reduce((a, b) => a + b)
+      )
+      .subscribe(console.log)
+    // of(datas)
   })
 })
